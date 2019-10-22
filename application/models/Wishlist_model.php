@@ -41,4 +41,25 @@ class Wishlist_model extends CI_Model
         $this->db->update("cart", $formData);
         die("Muhammd Tala");
     }
+
+    public function getWishlistByUserId($id)
+    {
+        $this->db->select("productid");
+        $this->db->where("userid", $id);
+        $results = $this->db->get("wishlist")->result();
+
+        if (count($results) > 0) {
+            $productIds = array();
+
+            foreach ($results as $result) {
+                $productIds[] = $result->productid;
+            }
+
+            $this->db->select("*");
+            $this->db->where_in("Id", $productIds);
+            $productsDetail = $this->db->get("product")->result();
+            return $productsDetail;
+        }
+        return $results;
+    }
 }

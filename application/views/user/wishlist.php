@@ -19,17 +19,15 @@ if (!isset($_SESSION['email'])) {
         </div>
     </div>
 
-
-
     <div class="container">
         <div class="row">
             <div class="col-lg-3 mt-5">
 
                 <div class="user-aside-con">
                     <ul class="user-aside">
-                        <li><a href="<?php echo base_url() . "User/profile"; ?>" class="color-purple"><i class="fa fa-caret-right color-purple" aria-hidden="true"></i> Account Information</a></li>
+                        <li><a href="<?php echo base_url() . "User/profile"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> Account Information</a></li>
                         <li><a href="<?php echo base_url() . "User/order"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> My Orders</a></li>
-                        <li><a href="<?php echo base_url() . "User/wishlist"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> My Wishlist</a></li>
+                        <li><a href="<?php echo base_url() . "User/wishlist"; ?>" class="color-purple"><i class="fa fa-caret-right color-purple" aria-hidden="true"></i> My Wishlist</a></li>
                         <li><a href="<?php echo base_url() . "User/newsletter"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> My Newsletter</a></li>
                         <li><a href="<?php echo base_url() . "User/changepassword"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> Change Password</a></li>
                         <li><a href="<?php echo base_url() . "User/logout"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> Logout</a></li>
@@ -38,62 +36,53 @@ if (!isset($_SESSION['email'])) {
 
             </div>
             <div class="col-lg-9">
+                <?php if (count($userWishlist) > 0) { ?>
+                    <div class="whishlist-page mt-5">
+                        <div class="table-responsive price-table">
+                            <table class="roundedCorners">
+                                <thead>
+                                    <tr>
+                                        <th>IMAGE</th>
+                                        <th>PRODUCT NAME</th>
+                                        <th>STOCK</th>
+                                        <th>UNIT PRICE</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($userWishlist as $wishlist) { ?>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="table-img">
+                                                        <?php $pics = json_decode($wishlist->Picture); ?>
+                                                        <img src="<?php echo base_url() . "upload/" . $pics[1]; ?>" width="60" height="60" class="img-fluid" alt="">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><?php echo $wishlist->Name; ?></td>
+                                            <td><?php if ($wishlist->stock > 0) {
+                                                            echo "In Stock";
+                                                        } else {
+                                                            echo "Out of Stock";
+                                                        } ?></td>
+                                            <td><?php echo "$" . sprintf("%.2f", $wishlist->Price); ?> <strike><?php echo "$" . sprintf("%.2f", $wishlist->OldPrice); ?></strike></td>
+                                            <td>
+                                                <span class="whishlist-cart"><i class="fa fa-shopping-cart"></i></span>
+                                                <span class="whishlist-del"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
 
-                <div class="whishlist-page mt-5">
-                    <div class="table-responsive price-table">
-                        <table class="roundedCorners">
-                            <thead>
-                                <tr>
-                                    <th>IMAGE</th>
-                                    <th>PRODUCT NAME</th>
-                                    <th>MODEL</th>
-                                    <th>STOCK</th>
-                                    <th>UNIT PRICE</th>
-                                    <th>ACTION</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <div class="table-img">
-                                                <img src="images/train.png" width="60" height="60" class="img-fluid" alt="">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>Canon EOS 5D</td>
-                                    <td>Product 3</td>
-                                    <td>In Stock</td>
-                                    <td>$55.00 <strike>$100.00</strike></td>
-                                    <td>
-                                        <span class="whishlist-cart"><i class="fa fa-shopping-cart"></i></span>
-                                        <span class="whishlist-del"><i class="fa fa-times" aria-hidden="true"></i></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <div class="table-img">
-                                                <img src="images/train.png" width="60" height="60" class="img-fluid" alt="">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>Canon EOS 5D</td>
-                                    <td>Product 3</td>
-                                    <td>In Stock</td>
-                                    <td>$55.00 <strike>$100.00</strike></td>
-                                    <td>
-                                        <span class="whishlist-cart"><i class="fa fa-shopping-cart"></i></span>
-                                        <span class="whishlist-del"><i class="fa fa-times" aria-hidden="true"></i></span>
-                                    </td>
-                                </tr>
-
-                            </tbody>
-                        </table>
                     </div>
-
-                </div>
-
+                <?php } else { ?>
+                    <div class="cust-pages-container mt-5">
+                        <h2>No product added to wishlist!</h2>
+                    </div>
+                <?php } ?>
             </div>
 
 

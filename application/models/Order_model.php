@@ -46,7 +46,7 @@ class Order_model extends CI_Model
     }
 
     public function getOrderCount(){
-        return $this->db->where('status',"pending")->count_all_results('order');;
+        return $this->db->where('status',"pending")->count_all_results('order');
     }
 
     public function getOrderByUserId($id)

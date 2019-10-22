@@ -27,11 +27,11 @@ if (!isset($_SESSION['email'])) {
 
                 <div class="user-aside-con">
                     <ul class="user-aside">
-                        <li><a href="<?php echo base_url() . "User/profile"; ?>" class="color-purple"><i class="fa fa-caret-right color-purple" aria-hidden="true"></i> Account Information</a></li>
+                        <li><a href="<?php echo base_url() . "User/profile"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> Account Information</a></li>
                         <li><a href="<?php echo base_url() . "User/order"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> My Orders</a></li>
                         <li><a href="<?php echo base_url() . "User/wishlist"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> My Wishlist</a></li>
                         <li><a href="<?php echo base_url() . "User/newsletter"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> My Newsletter</a></li>
-                        <li><a href="<?php echo base_url() . "User/changepassword"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> Change Password</a></li>
+                        <li><a href="<?php echo base_url() . "User/changepassword"; ?>" class="color-purple"><i class="fa fa-caret-right color-purple" aria-hidden="true"></i> Change Password</a></li>
                         <li><a href="<?php echo base_url() . "User/logout"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> Logout</a></li>
                     </ul>
                 </div>

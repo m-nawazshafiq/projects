@@ -16,7 +16,7 @@ if (!isset($_SESSION['email'])) {
 
     <div class="login-bg">
         <div class="login-color-bg">
-            <h1>Change Password</h1>
+            <h1>Newsletters</h1>
         </div>
     </div>
 
@@ -28,10 +28,10 @@ if (!isset($_SESSION['email'])) {
 
                 <div class="user-aside-con">
                     <ul class="user-aside">
-                        <li><a href="<?php echo base_url() . "User/profile"; ?>" class="color-purple"><i class="fa fa-caret-right color-purple" aria-hidden="true"></i> Account Information</a></li>
+                        <li><a href="<?php echo base_url() . "User/profile"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> Account Information</a></li>
                         <li><a href="<?php echo base_url() . "User/order"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> My Orders</a></li>
                         <li><a href="<?php echo base_url() . "User/wishlist"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> My Wishlist</a></li>
-                        <li><a href="<?php echo base_url() . "User/newsletter"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> My Newsletter</a></li>
+                        <li><a href="<?php echo base_url() . "User/newsletter"; ?>" class="color-purple"><i class="fa fa-caret-right color-purple" aria-hidden="true"></i> My Newsletter</a></li>
                         <li><a href="<?php echo base_url() . "User/changepassword"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> Change Password</a></li>
                         <li><a href="<?php echo base_url() . "User/logout"; ?>"><i class="fa fa-caret-right" aria-hidden="true"></i> Logout</a></li>
                     </ul>
@@ -39,7 +39,7 @@ if (!isset($_SESSION['email'])) {
 
             </div>
             <div class="col-lg-9">
-
+                <?php echo form_open("User/newsletter"); ?>
                 <div class="cust-pages-container details-page mt-5">
                     <h2 class="mb-3">Newsletter Subscription</h2>
                     <span class="mr-3">Subscribe</span>
@@ -59,9 +59,12 @@ if (!isset($_SESSION['email'])) {
                             </label>
                         </div>
                     </div>
-                    <div class="mt-4"><a href="#" class="btn register-btn">Continue</a></div>
+                    <?php if (form_error('newsletterSubs')) { ?>
+                        <label class="alert alert-danger error-msg" style="margin-top:0px; float: none;"><?php echo form_error('newsletterSubs'); ?></label>
+                    <?php } ?>
+                    <div class="mt-4"><input type="submit" value="Continue" class="btn register-btn" /></div>
                 </div>
-
+                </form>
             </div>
 
 

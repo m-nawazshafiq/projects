@@ -35,6 +35,7 @@ class Order extends CI_Controller {
 		$this->load->model('Order_model');
 		$data['Order_list'] = $this->Order_model->getOrderByUserId($userid);
 	}
+	
 	public function updateStatus()
 	{
 		$data['status'] = $this->input->post('text');

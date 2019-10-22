@@ -70,11 +70,15 @@ if (!isset($_SESSION['email'])) {
                         </div>
                         <div class="col-md-6 cust-cont-info-cont">
                             <div class="mt-2 cust-border cust-cont-info-link">
-                                Newsletter <a href="<?php echo base_url() . "User/editNewsletter"; ?>" class="color-purple">edit</a>
+                                Newsletter <a href="<?php echo base_url() . "User/newsletter"; ?>" class="color-purple">edit</a>
                             </div>
                             <div class="ml-4 mt-3">
                                 <span>
+                                    <?php if($customer[0]['newsletter'] == 0){?>
                                     You are currently not subscribed to any newsletters.
+                                    <?php }else{?>
+                                    You have subscribed for newsletters.
+                                    <?php }?>
                                 </span>
                             </div>
                         </div>

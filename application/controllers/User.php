@@ -197,6 +197,7 @@ class User extends CI_Controller
 
         if ($this->form_validation->run() == TRUE) {
             $this->Customer_model->newsletterSubscription($id, $this->input->post('newsletterSubs'));
+            redirect(base_url()."User/profile");
         }
 
         $this->load->view("user/newsletter", $data);
@@ -217,7 +218,7 @@ class User extends CI_Controller
         $this->form_validation->set_rules('city', 'City', 'required');
         $this->form_validation->set_rules('country', 'Country', 'required');
         $this->form_validation->set_rules('postcode', 'PostCode/ZIP', 'required');
-        //$this->form_validation->set_rules('region', 'Region', 'required');
+        $this->form_validation->set_rules('region', 'Region', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
 
         $this->form_validation->set_message('required', 'Field required');
@@ -262,14 +263,28 @@ class User extends CI_Controller
 
             if ($type == 'addbilling') {
 
-                $this->session->set_flashdata('addressType', 'addbilling');
-                $this->load->view('user/addAddress', $data);
+                $data['addressDetail'] = $this->Customer_model->getBillingDetail($userId);
+
+                if (count($data['addressDetail'][0]) == 0) {
+
+                    $this->session->set_flashdata('addressType', 'addbilling');
+                    $this->load->view('user/addAddress', $data);
+                } else {
+                    redirect(base_url() . "User/address/editbilling");
+                }
 
             } else if ($type == 'addshipping') {
 
-                $this->session->set_flashdata('addressType', 'addshipping');
-                $this->load->view('user/addAddress', $data);
-                
+                $data['addressDetail'] = $this->Customer_model->getBillingDetail($userId);
+
+                if (count($data['addressDetail'][0]) == 0) {
+
+                    $this->session->set_flashdata('addressType', 'addshipping');
+                    $this->load->view('user/addAddress', $data);
+                } else {
+                    redirect(base_url() . "User/address/editbilling");
+                }
+
             } else if ($type == 'editbilling') {
 
                 $data['addressDetail'] = $this->Customer_model->getBillingDetail($userId);
@@ -292,6 +307,42 @@ class User extends CI_Controller
                 }
             }
         }
+    }
+
+    public function order(){
+        $this->load->model('Product_model');
+        $this->load->model('Category_model');
+        $this->load->model('Customer_model');
+        $this->load->model('Order_model');
+
+        $data['cat_display'] = "hide";
+        $data['product_name_list'] = $this->Product_model->GetProductNames();
+        $data['category_list'] = $this->Category_model->GetCategories();
+        
+        $userEmail = $this->session->email;
+        $id = $this->Customer_model->getId($userEmail);
+
+        $data['userOrders']=$this->Order_model->getOrderByUserId($id);
+
+        $this->load->view("user/order",$data);
+    }
+
+    public function wishlist(){
+        $this->load->model('Product_model');
+        $this->load->model('Category_model');
+        $this->load->model('Customer_model');
+        $this->load->model('Wishlist_model');
+
+        $data['cat_display'] = "hide";
+        $data['product_name_list'] = $this->Product_model->GetProductNames();
+        $data['category_list'] = $this->Category_model->GetCategories();
+        
+        $userEmail = $this->session->email;
+        $id = $this->Customer_model->getId($userEmail);
+
+        $data['userWishlist']=$this->Wishlist_model->getWishlistByUserId($id);
+
+        $this->load->view("user/wishlist",$data);
     }
 
     public function getStates()
