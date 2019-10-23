@@ -9,5 +9,6 @@ class AdminMain extends CI_Controller {
 		$data['order'] = $this->Order_model->getOrderCount();
 		$this->load->view('admin/admindashboard', $data);
 	}
+	
 }
 ?>
