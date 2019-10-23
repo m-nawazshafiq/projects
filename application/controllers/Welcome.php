@@ -10,6 +10,7 @@ class Welcome extends CI_Controller
 		$this->load->model('Product_model');
 		$this->load->model('Brand_model');
 		$this->load->model('Blog_model');
+		$this->load->library('cart');
 		
 		/*$_SESSION['cartAdd'] = NULL;
 

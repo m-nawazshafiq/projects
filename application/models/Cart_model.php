@@ -10,9 +10,9 @@ class Cart_model extends CI_Model{
 		$this->db->insert('cart',$data);
 		$insertId = $this->db->insert_id();
 
-
 		return  $insertId;
 	}
+	
 	public function GetCart()
 	{
 		$this->db->select('*');

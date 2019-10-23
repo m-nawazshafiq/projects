@@ -217,7 +217,7 @@
                         </a>
                         <div class="part-3">
                             <span><strike><?php echo "$" . $product->OldPrice ?></strike> <?php echo "$" . $product->Price ?></span>
-                            <p>Add To Cart</p>
+                            <div class="add-cart"><a href="<?php echo base_url()."Cart/addCart/".$product->Id;?>">Add To Cart</a></div>
                             <div class="icons-container">
                                 <div class="icons"><img src="<?php echo base_url(); ?>images/myImages/filll-heart.png" class="img-fluid"></div>
                                 <div class="icons"><img src="<?php echo base_url(); ?>images/myImages/eye.png" class="img-fluid"></div>

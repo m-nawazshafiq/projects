@@ -1,19 +1,19 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Cart extends CI_Controller {
+class Cart extends CI_Controller
+{
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('Product_model');
 		$this->load->model('Category_model');
-		$this->load->model('Cart_model');
-		$this->load->model('Newsitem_model');
-		$this->load->model('Settings_model');
-		$this->load->model('Page_model');
-	
-		
+		$this->load->model('Customer_model');
+		//$this->load->model('Cart_model');
+		//$this->load->model('Newsitem_model');
+		//$this->load->model('Settings_model');
+		//$this->load->model('Page_model');
 		$this->load->library('cart');
 	}
 	public function index()
@@ -29,15 +29,22 @@ class Cart extends CI_Controller {
 	}
 	public function MyCart()
 	{
+		$data['cat_display'] = "hide";
+		$data['product_name_list'] = $this->Product_model->GetProductNames();
 		$data['category_list'] = $this->Category_model->GetCategories();
+
+		//$userEmail = $this->session->email;
+		//$id = $this->Customer_model->getId($userEmail);
+
+		//$data['category_list'] = $this->Category_model->GetCategories();
 		//$data['cart_list'] = $this->Cart_model->GetCart();
-		$data['product_list']=$this->Product_model->GetProducts();
-		$this->load->model('Tags_model');
-		$data['tag_list'] = $this->Tags_model->GetTags();
-		$data['news_list'] = $this->Newsitem_model->GetNewsitem();
-		$data['setting_list'] = $this->Settings_model->GetSettings();
-		$data['page_list'] = $this->Page_model->GetPages();
-		 $this->load->view('mycart',$data);
+		//$data['product_list']=$this->Product_model->GetProducts();
+		//$this->load->model('Tags_model');
+		//$data['tag_list'] = $this->Tags_model->GetTags();
+		//$data['news_list'] = $this->Newsitem_model->GetNewsitem();
+		//$data['setting_list'] = $this->Settings_model->GetSettings();
+		//$data['page_list'] = $this->Page_model->GetPages();
+		$this->load->view('shoppingcart', $data);
 	}
 	public function checkOut()
 	{
@@ -63,7 +70,7 @@ class Cart extends CI_Controller {
 			$data['orderDate'] = date('Y-m-d');
 			$data['status'] = "Pending";
 			$orderId = $this->Order_model->SaveOrder($data);
-			
+
 
 			foreach ($this->cart->contents() as $cart) {
 				$orderDetail['orderid'] = $orderId;
@@ -72,7 +79,6 @@ class Cart extends CI_Controller {
 				$orderDetail['price'] = $cart['price'];
 				$orderDetail['discount'] = 0;
 				$this->Order_model->SaveOrderDetail($orderDetail);
-
 			}
 			$to_email = $this->input->post('email');
 			$this->emailSend($to_email);
@@ -84,31 +90,62 @@ class Cart extends CI_Controller {
 			$this->load->view("mycart", $data);
 		}
 	}
-	
-	public function addCart($id){
-		
-		$this->load->library('cart');
 
-		$product = $this->Product_model->getProductById($id);
-		$dataForm['ProductName'] = $product[0]['Name'];
-		$dataForm['Price'] = $product[0]['Price'];
-		$dataForm['Picture'] = $product[0]['Picture'];
-		$dataForm['productId'] = $product[0]['Id'];
+	public function addCart($id)
+	{
 
-		$data = array(
-			'id'      => $id,
-			'qty'     => 1,
-			'price'   => $dataForm['Price'],
-			'name'    => $dataForm['ProductName'],
-			'image' => $dataForm['Picture'],
-		);
+		//$this->load->library('cart');
+		$dataExist = false;
 
-		$this->cart->insert($data);
+		$cartData = $this->cart->contents();
+
+		foreach ($cartData as $cart) {
+			if ($cart['id'] == $id) {
+				if ($cart['qty'] < $cart['cartData']['maxQty']) {
+					$qty = $cart['qty'] + 1;
+
+					$data = array(
+						'rowid' => $cart['rowid'],
+						'qty'   => $qty
+					);
+
+					$this->cart->update($data);
+				}
+
+				$dataExist = true;
+				break;
+			}
+		}
+
+		if (!$dataExist) {
+			$product = $this->Product_model->getProductById($id);
+			$dataForm['ProductName'] = $product[0]['Name'];
+			$dataForm['Price'] = $product[0]['Price'];
+			$dataForm['minCartQty'] = $product[0]['MinCartQty'];
+
+			$cartData = array(
+				'image' => $product[0]['Picture'],
+				'minQty' => $dataForm['minCartQty'],
+				'maxQty' => $product[0]['MaxCartQty']
+			);
+
+			$data = array(
+				'id'      => $id,
+				'qty'     => $dataForm['minCartQty'],
+				'price'   => $dataForm['Price'],
+				'name'    => $dataForm['ProductName'],
+				'cartData' => $cartData
+			);
+
+			$this->cart->insert($data);
+		}
+
 		$this->session->set_flashdata('cartAdded', 'You Product is Added to cart');
 		redirect(base_url());
 	}
 
-	public function delete(){
+	public function delete()
+	{
 
 		$data = array(
 			'rowid' => $_POST['id'],
@@ -122,7 +159,8 @@ class Cart extends CI_Controller {
 		//redirect(base_url() . "Cart/MyCart");
 	}
 
-	public function updateQuantity(){
+	public function updateQuantity()
+	{
 		$data = array(
 			'rowid' => $_POST['id'],
 			'qty'   => $_POST['quantity']
@@ -131,7 +169,8 @@ class Cart extends CI_Controller {
 		echo json_encode($this->cart->total());
 	}
 
-	public function showOrder(){
+	public function showOrder()
+	{
 		$this->load->view('admin/manageorder');
 	}
 

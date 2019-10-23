@@ -1,7 +1,6 @@
-<?php 
-if(isset($_COOKIE["remember_me"]))   
-{
-    $_SESSION['email']=$_COOKIE["remember_me"];
+<?php
+if (isset($_COOKIE["remember_me"])) {
+    $_SESSION['email'] = $_COOKIE["remember_me"];
 }
 ?>
 
@@ -54,7 +53,7 @@ if(isset($_COOKIE["remember_me"]))
                         <div class="mobile-top-nav-sec">
                             <ul>
                                 <li>
-                                    <a class="active" href="#home"><img src="<?php echo base_url(); ?>images/myImages/cart.png" />
+                                    <a class="active" href="<?php echo base_url() . "Cart/mycart"; ?>"><img src="<?php echo base_url(); ?>images/myImages/cart.png" />
                                         <span>Cart</span>
                                     </a>
                                 </li>
@@ -74,29 +73,34 @@ if(isset($_COOKIE["remember_me"]))
 
                 </div>
                 <!--mobile top sec ends-->
-                <div class="d-none d-xl-block">
-                    <div class="d-flex justify-content-end">
-                        <div class="topnav">
-                            <ul>
-                                <li>
-                                    <a class="active" href="#home"><img src="<?php echo base_url(); ?>images/myImages/cart.png" />
-                                        <p>Cart</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#news"><img src="<?php echo base_url(); ?>images/myImages/heart.png" />
-                                        <p>Whishlist</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#contact"><img src="<?php echo base_url(); ?>images/myImages/compare.png" />
-                                        <p>Compare</p>
-                                    </a>
-                                </li>
-                            </ul>
+                    <div class="d-none d-xl-block">
+                        <div class="d-flex justify-content-end">
+                            <div class="topnav">
+                                <ul>
+                                    <li>
+                                        <div style="position: relative;">
+                                            <a class="active" href="<?php echo base_url() . "Cart/mycart"; ?>"><img src="<?php echo base_url(); ?>images/myImages/cart.png" />
+                                                <p>Cart : <?php echo count($this->cart->contents());?></p>
+                                            </a>
+                                            <div class="cart-notification-cont">
+                                                hi
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a href="#news"><img src="<?php echo base_url(); ?>images/myImages/heart.png" />
+                                            <p>Whishlist</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#contact"><img src="<?php echo base_url(); ?>images/myImages/compare.png" />
+                                            <p>Compare</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
 
             </div>
         </div>
@@ -288,12 +292,12 @@ if(isset($_COOKIE["remember_me"]))
                         <div class="dropdown">
                             <a class="nav-link" style="line-height: normal;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle"></i> <span style="line-height: normal; font-size: 14px;">Account <i style="font-size: 12px;" class="fa fa-caret-down" aria-hidden="true"></i></span></a>
                             <ul class="dropdown-menu">
-                                <?php if(!isset($_SESSION['email'])){?>
-                                <li><a href="<?php echo base_url() . "User/login" ?>">Login</a></li>
-                                <li><a href="<?php echo base_url() . "User/signup" ?>">Register</a></li>
-                                <?php }else{?>
-                                <li><a href="<?php echo base_url() . "User/logout" ?>">Logout</a></li>
-                                <?php }?>
+                                <?php if (!isset($_SESSION['email'])) { ?>
+                                    <li><a href="<?php echo base_url() . "User/login" ?>">Login</a></li>
+                                    <li><a href="<?php echo base_url() . "User/signup" ?>">Register</a></li>
+                                <?php } else { ?>
+                                    <li><a href="<?php echo base_url() . "User/logout" ?>">Logout</a></li>
+                                <?php } ?>
                             </ul>
                         </div>
                     </li>

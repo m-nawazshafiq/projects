@@ -1,7 +1,7 @@
 <?php
 if (!isset($_SESSION['email'])) {
 
-    redirect(base_url() . 'Customer/signup');
+    redirect(base_url() . 'User/signup');
 }
 ?>
 

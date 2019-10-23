@@ -529,7 +529,7 @@ h1 {
 	border-radius: 10px 10px 0px 0px;
 	box-shadow: 1px 1.732px 5px rgba(0, 0, 0, 0.07);
 	background-color: #e8e8e8;
-	font-size: 10px;
+	font-size: 11px;
 	letter-spacing: 0px;
 	font-weight: bold;
 }
@@ -569,6 +569,9 @@ h1 {
 .sec-3-products:hover .part-3 {
 	color: white;
 	background-color: #aba000;
+}
+.sec-3-products:hover .part-3 a{
+	color: white;
 }
 
 .sec-3-products strike {
@@ -2197,4 +2200,18 @@ table.roundedCorners th {
 
 .btn {
 	cursor: pointer;
+}
+
+.cart-notification-cont{
+	position: absolute;
+
+}
+
+.add-cart{
+	margin-top: 5px;
+}
+
+.add-cart a{
+	color: #000000;
+	font-size: 12px;
 }
