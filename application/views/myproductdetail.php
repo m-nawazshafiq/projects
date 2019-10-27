@@ -25,11 +25,15 @@
                                     ?>
                                     <div>
                                         <div class="product-images-bg">
-                                            <img src="<?php echo base_url() . 'upload/' . $pics[$x]; ?>" class="img-fluid" alt="">
+                                            <div class="easyzoom easyzoom--overlay">
+                                                <a href="<?php echo base_url() . 'images/zoom/' . $pics[$x]; ?>">
+                                                    <img src="<?php echo base_url() . 'upload/' . $pics[$x]; ?>" class="img-fluid pro-detail-img" alt="">
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                             <?php }
-                            }else{
+                            } else {
                                 echo '<h4>No Pictures</h4>';
                             } ?>
                         </section>
@@ -123,6 +127,36 @@
                                 <?php echo $product_detail[0]['LongDescription'] ?>
                             </div>
                             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                <div class="container">
+                                    <div class="login-sec mt-2 p-0 border-0">
+                                        <h3 class="heading-font-fam">Write a review</h3>
+                                        <label>*Your Email</label>
+                                        <input type="email" id="review-email" placeholder="Enter Your email" class="form-control" name="email">
+                                        <label>*Your Review</label>
+                                        <textarea name="review" id="review-text" class="form-control shipp-com" cols="30" rows="4"></textarea>
+                                        <input type="hidden" id="pro-id" value="<?php echo $product_detail[0]['Id']; ?>" />
+                                        <label style="display:block;">*Your Rating</label>
+
+                                        <div class="ml-4">
+                                            <span class="mr-4">Good</span>
+                                            <?php for ($x = 1; $x <= 5; $x++) { ?>
+                                                <div class="pretty p-icon p-toggle p-plain">
+                                                    <input type="radio" name="rating" value="<?php echo $x; ?>" />
+                                                    <div class="state p-on">
+                                                        <i class="fa fa-star color-purple font-s-20"></i>
+                                                        <label></label>
+                                                    </div>
+                                                    <div class="state p-off">
+                                                        <i class="fa fa-star-o color-purple font-s-20"></i>
+                                                        <label></label>
+                                                    </div>
+                                                </div>
+                                            <?php } ?>
+                                            <span>Excellent</span>
+                                            <button type="button" class="btn register-btn float-right" id="rating-submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

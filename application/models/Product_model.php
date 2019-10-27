@@ -83,6 +83,7 @@ class Product_model extends CI_Model
 
     public function getLatestProduct()
     {
+        $this->db->select("*,(select AVG(Rating) from productreview where ProductId=product.Id) AS rate");
         $this->db->order_by("Id", "desc");
         $this->db->limit(4);
         return $this->db->get('product')->result();
@@ -99,7 +100,6 @@ class Product_model extends CI_Model
     {
         $this->db->insert('productreview', $data);
         $insertId = $this->db->insert_id();
-
 
         return  $insertId;
     }

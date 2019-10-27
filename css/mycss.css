@@ -570,7 +570,7 @@ h1 {
 	color: white;
 	background-color: #aba000;
 }
-.sec-3-products:hover .part-3 a{
+.sec-3-products:hover .part-3 a {
 	color: white;
 }
 
@@ -594,6 +594,7 @@ h1 {
 	vertical-align: middle;
 	background-color: white;
 	margin-left: 5px;
+	cursor: pointer;
 }
 
 .sec-3-products .icons-container {
@@ -1906,7 +1907,10 @@ table.roundedCorners th {
 .ship-det-feilds {
 	display: none;
 }
-
+.shipp-com {
+	border-radius: 25px;
+	resize: none;
+}
 .ship-diff {
 	margin-bottom: 15px;
 }
@@ -2202,16 +2206,90 @@ table.roundedCorners th {
 	cursor: pointer;
 }
 
-.cart-notification-cont{
+.cart-notification-cont {
 	position: absolute;
-
 }
 
-.add-cart{
+.add-cart {
 	margin-top: 5px;
 }
 
-.add-cart a{
+.add-cart a {
 	color: #000000;
 	font-size: 12px;
+}
+
+.update-cart-btn i {
+	color: #ec9044;
+}
+
+.update-cart-btn:hover {
+	background-color: #ec9044;
+}
+
+.update-cart-btn:hover i {
+	color: #fff !important;
+}
+
+.delete-cart-btn i {
+	color: #92278f;
+}
+
+.delete-cart-btn:hover {
+	background-color: #92278f;
+}
+
+.delete-cart-btn:hover i {
+	color: #fff !important;
+}
+
+.notification {
+	border: none;
+	border-radius: 0px;
+	position: fixed;
+	top: -100px;
+	width: 100%;
+	z-index: 2000;
+	background-color: rgba(212, 237, 218, 0.9);
+	transition-property: top;
+	transition-duration: 0.5s;
+}
+
+.show-notification .notification {
+	top: 0px;
+	transition-property: top;
+	transition-duration: 0.5s;
+}
+
+.font-s-20 {
+	font-size: 20px !important;
+}
+
+.pro-icons-img {
+	width: 14px;
+	height: 14px;
+}
+
+.header-icons-2 {
+	height: 26px;
+	width: 24px;
+}
+
+.header-icons {
+	height: 26px;
+	width: 26px;
+}
+
+.pro-icons-img:hover g {
+	fill: #92278f !important;
+}
+
+.pro-detail-img {
+	width: 380px;
+	height: 350px;
+}
+
+.pro-dis-img{
+	width: 150px;
+	height: 180px;
 }

@@ -28,10 +28,12 @@
                     <th scope="col">UNIT PRICE</th>
                     <th scope="col">TOTAL</th>
                 </tr>
-                <?php foreach ($this->cart->contents() as $cart) {
+                <?php $count = 1;
+                foreach ($this->cart->contents() as $cart) {
                     $pic = json_decode($cart['cartData']['image']); ?>
 
                     <tr>
+                        <input type="hidden" value="<?php echo $cart['rowid']; ?>" class="<?php echo "cartid" . $count; ?>" name="cartname">
                         <td>
                             <div class="d-flex justify-content-center">
                                 <div class="table-img">
@@ -43,58 +45,17 @@
                         <td>20 Products</td>
                         <td>
                             <div class="btn-group cart-btn-group" role="group" aria-label="Basic example">
-                                <input type="number" max="<?php echo $cart['cartData']['maxQty']; ?>" min="<?php echo $cart['cartData']['minQty']; ?>" ; value="<?php echo $cart['qty']; ?>" class="qty-input" name="qty">
-                                <div class="btn"><i class="fa fa-refresh" style="color: #ec9044;" aria-hidden="true"></i>
+                                <input id="<?php echo "qty-field" . $count; ?>" type="number" max="<?php echo $cart['cartData']['maxQty']; ?>" min="<?php echo $cart['cartData']['minQty']; ?>" ; value="<?php echo $cart['qty']; ?>" class="qty-input" name="qty">
+                                <div id="<?php echo "update-cart-qty" . $count; ?>" class="btn update-cart-btn"><i class="fa fa-refresh" style="" aria-hidden="true"></i>
                                 </div>
-                                <div class="btn"><i class="fa fa-window-close" style="color:#92278f;" aria-hidden="true"></i></div>
+                                <div id="<?php echo "delete-cart" . $count; ?>" class="btn delete-cart-btn"><i class="fa fa-window-close" style="color:#92278f;" aria-hidden="true"></i></div>
                             </div>
                         </td>
                         <td><?php echo "$" . $cart['price']; ?></td>
-                        <td>$144</td>
+                        <td id="<?php echo "total-price" . $count; ?>"><?php echo "$" . $cart['qty'] * $cart['price']; ?></td>
                     </tr>
-                <?php } ?>
-                <!--<tr>
-                    <td>
-                        <div class="d-flex justify-content-center">
-                            <div class="table-img">
-                                <img src="images/Untitled-2.png" width="60" height="60" class="img-fluid" alt="">
-                            </div>
-                        </div>
-                    </td>
-                    <td>Lorem Ipsum is simply </td>
-                    <td>20 Products</td>
-                    <td>
-                        <div class="btn-group cart-btn-group" role="group" aria-label="Basic example">
-                            <div class="btn" style="cursor: text;" contenteditable="true">2</div>
-                            <div class="btn"><i class="fa fa-refresh" style="color: #ec9044;" aria-hidden="true"></i>
-                            </div>
-                            <div class="btn"><i class="fa fa-window-close" style="color:#92278f;" aria-hidden="true"></i></div>
-                        </div>
-                    </td>
-                    <td>$7886</td>
-                    <td>$144</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="d-flex justify-content-center">
-                            <div class="table-img">
-                                <img src="images/toy.png" width="60" height="60" class="img-fluid" alt="">
-                            </div>
-                        </div>
-                    </td>
-                    <td>Lorem Ipsum is simply </td>
-                    <td>20 Products</td>
-                    <td>
-                        <div class="btn-group cart-btn-group" role="group" aria-label="Basic example">
-                            <div class="btn" style="cursor: text;" contenteditable="true">2</div>
-                            <div class="btn"><i class="fa fa-refresh" style="color: #ec9044;" aria-hidden="true"></i>
-                            </div>
-                            <div class="btn"><i class="fa fa-window-close" style="color:#92278f;" aria-hidden="true"></i></div>
-                        </div>
-                    </td>
-                    <td>$7886</td>
-                    <td>$144</td>
-                </tr>-->
+                <?php $count++;
+                } ?>
             </table>
         </div>
 
@@ -351,8 +312,86 @@
 
     <!--Subscribe Section ends-->
 
-    <?php require("myFooter.php"); ?>
 
+
+    <?php require("myFooter.php"); ?>
+    <script>
+        var changeOccured = false;
+
+        $("input[id^='qty-field']").on('change', function() {
+            changeOccured = true;
+        });
+
+        //ajax call for qty update
+        $("div[id^='update-cart-qty']").on("click", function(event) {
+
+            if (changeOccured) {
+                $suffix = $(this).attr("id").match(/\d+/);
+                changeOccured = false;
+                var qty = $('#qty-field' + $suffix).val();
+                var cartid = $('.cartid' + $suffix).val();
+                $.ajax({
+                    url: "<?php echo base_url(); ?>" + "Cart/updateQuantity",
+                    type: 'post',
+                    data: {
+                        "id": cartid,
+                        "quantity": qty
+                    },
+                    dataType: 'json',
+                    success: function(json) {
+                        //alert(json);
+
+                        $("#total-price" + $suffix).html("$" + json.price * qty);
+
+                        if(json.msg == ''){
+                            message="Quantity updated successfully !";
+                        }else{
+                            message=json.msg;
+                            $('#qty-field' + $suffix).val(json.qty);
+                        }
+
+                        $(".notification-msg").html(message);
+                        $("body").addClass("show-notification");
+
+                        setTimeout(function() {
+                            $("body").removeClass("show-notification");
+                        }, 2000);
+
+                    },
+                    error: function(error) {
+                        alert('no');
+                    }
+                });
+            }
+        });
+
+
+
+        //ajax call for cart item deletion
+        $("div[id^='delete-cart']").on("click", function(event) {
+            var clickId = $(this).attr("id");
+            $suffix = $(this).attr("id").match(/\d+/);
+            var cartid = $('.cartid' + $suffix).val();
+
+            $.ajax({
+                url: "<?php echo base_url(); ?>" + "Cart/delete",
+                type: 'post',
+                data: {
+                    "id": cartid
+                },
+                dataType: 'json',
+                success: function(json) {
+
+                    $(".cart-count").html(json);
+                    $("#" + clickId).closest('tr').remove();
+
+                },
+                error: function(error) {
+                    alert('no');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

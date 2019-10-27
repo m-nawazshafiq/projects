@@ -209,7 +209,7 @@ if (!isset($_SESSION['adminName'])) {
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead>
-                                    <tr role="row">                                        
+                                    <tr role="row">
                                         <th>Product Name</th>
                                         <th class="min-tablet">Customer Name</th>
                                         <th class="min-desktop">Customer Email</th>
@@ -224,16 +224,22 @@ if (!isset($_SESSION['adminName'])) {
                                 <tbody>
                                     <?php
                                     $Counter = 1;
-                                                                
+
 
                                     foreach ($review_list as $review) {
-                                        $product=$this->Product_model->getProductById($review->ProductId);
-                                        $customer=$this->Customer_model->getCustomerById($review->CustomerId);
+                                        $product = $this->Product_model->getProductById($review->ProductId);
+                                        if ($review->CustomerId != 0) {
+                                            $customer = $this->Customer_model->getCustomerById($review->CustomerId);
+                                        }
                                         ?>
                                         <tr class="review_list">
-                                            
+
                                             <td><?php echo $product[0]['Name']; ?></td>
-                                            <td><?php echo $customer[0]['UserName']; ?></td>
+                                            <td><?php if ($review->CustomerId != 0) {
+                                                        echo $customer[0]['UserName'];
+                                                    } else {
+                                                        echo "Not a customer";
+                                                    } ?></td>
                                             <td><?php echo $review->CustomerEmail; ?></td>
                                             <td><?php echo $review->ReviewText; ?></td>
                                             <td><?php echo $review->Rating; ?></td>

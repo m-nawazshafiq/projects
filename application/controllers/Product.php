@@ -618,6 +618,7 @@ class Product extends CI_Controller
 
     function productreview($id)
     {
+        $reciewSaved=false;
         $this->load->library('form_validation');
         $this->form_validation->set_rules('text-review', 'Review', 'required');
         $this->form_validation->set_rules('userEmail', 'Email', 'required');
@@ -630,12 +631,19 @@ class Product extends CI_Controller
             $data['ProductId'] = $id;
             $data['IsApproved'] = "NotApproved";
             $data['CustomerEmail'] = $this->input->post('userEmail');
-            $data['CustomerId'] = $this->input->post('userid');
+
+            if(isset($this->session->email)){
+                $this->load->model("Customer_model");
+                $userId=$this->Customer_model->getId($this->session->email);
+                $data['CustomerId'] = $userId;
+            }
+
             $data['CreatedDate'] = Date('Y-m-d');
             $this->load->model('Product_model');
             $this->Product_model->saveReview($data);
-            redirect(base_url() . 'Product/productdetail/' . $id);
+            $reciewSaved=true;
         }
+        echo json_encode($reciewSaved);
     }
 
     public function productReviewShow()

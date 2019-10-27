@@ -97,6 +97,8 @@ class Cart extends CI_Controller
 		//$this->load->library('cart');
 		$dataExist = false;
 
+		$qtyMsg = '';
+
 		$cartData = $this->cart->contents();
 
 		foreach ($cartData as $cart) {
@@ -110,6 +112,8 @@ class Cart extends CI_Controller
 					);
 
 					$this->cart->update($data);
+				} else {
+					$qtyMsg = "Product maximum cart limit is " . $cart['cartData']['maxQty'];
 				}
 
 				$dataExist = true;
@@ -141,7 +145,12 @@ class Cart extends CI_Controller
 		}
 
 		$this->session->set_flashdata('cartAdded', 'You Product is Added to cart');
-		redirect(base_url());
+
+		$resp = array(
+			"count" => count($this->cart->contents()),
+			"msg" => $qtyMsg
+		);
+		echo json_encode($resp);
 	}
 
 	public function delete()
@@ -151,22 +160,37 @@ class Cart extends CI_Controller
 			'rowid' => $_POST['id'],
 			'qty'   => 0
 		);
-		//die(print_r($_POST));
 
-		// $this->Cart_model->update($cartId, $formData);
 		$this->cart->update($data);
-		// $this->Cart_model->deleteCartProduct($productId);
-		//redirect(base_url() . "Cart/MyCart");
+
+		echo json_encode(count($this->cart->contents()));
 	}
 
 	public function updateQuantity()
 	{
-		$data = array(
-			'rowid' => $_POST['id'],
-			'qty'   => $_POST['quantity']
+		$rowid = $_POST['id'];
+		$qty = $_POST['quantity'];
+		$maxQty=$this->cart->get_item($rowid)["cartData"]["maxQty"];
+		$minQty=$this->cart->get_item($rowid)["cartData"]["minQty"];
+
+		$qtyMsg='';
+
+		if ($qty <= $maxQty && $qty >= $minQty) {
+			$data = array(
+				'rowid' => $rowid,
+				'qty'   => $qty
+			);
+			$this->cart->update($data);
+		}else{
+			$qtyMsg="Product maximum cart limit is " . $maxQty." & minimum limit is ".$minQty;
+		}
+
+		$resp = array(
+			"price" => $this->cart->get_item($rowid)['price'],
+			"msg" => $qtyMsg,
+			"qty"=>$this->cart->get_item($rowid)["qty"]
 		);
-		$this->cart->update($data);
-		echo json_encode($this->cart->total());
+		echo json_encode($resp);
 	}
 
 	public function showOrder()

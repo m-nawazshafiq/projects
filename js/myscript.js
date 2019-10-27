@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
   $(".js-example-basic-single").select2();
 
   $(".shipping-country-box").select2();
@@ -180,5 +181,146 @@ $(document).ready(function () {
         $('.ship-det-feilds').css('display', 'block');
       }
     });
+
+
+  $('.alert').alert();
+
+  //ajax call to add cart
+  $(".add-cart a").on("click", function (event) {
+    event.preventDefault();
+
+    var href = $(this).attr("href");
+
+    $.ajax({
+      url: href,
+      type: 'post',
+      dataType: 'json',
+      success: function (json) {
+        $(".cart-count").html(json.count);
+
+        if (json.msg == '') {
+          message = "Product added to cart successfully !";
+        } else {
+          message = json.msg;
+        }
+
+        $(".notification-msg").html(message);
+        $("body").addClass("show-notification");
+
+        setTimeout(function () {
+          $("body").removeClass("show-notification");
+        }, 2000);
+      },
+      error: function (error) {
+        alert('no');
+      }
+    });
+  });
+
+  $("#rating-submit").on('click', function () {
+    var productId = $("#pro-id").val();
+    var email = $("#review-email").val();
+    var text = $("#review-text").val();
+    var rateStars = $("input[name='rating']:checked").val();
+
+    if (email != "" && text != "" && typeof rateStars !== "undefined" && productId != "") {
+      $.ajax({
+        url: "http://localhost/Toys-master/Product/productreview/" + productId,
+        type: 'post',
+        data: {
+          "text-review": text,
+          "rating": rateStars,
+          "userEmail": email
+        },
+        dataType: 'json',
+        success: function (json) {
+
+          if (json) {
+            msg = "Thanks for your review !";
+            $("#review-email").val("");
+            $("#review-text").val("");
+            $("input[name='rating']:checked").prop("checked",false);
+          } else {
+            msg = "Please fill correct fields !";
+          }
+
+          $(".notification-msg").html(msg);
+          $("body").addClass("show-notification");
+
+          setTimeout(function () {
+            $("body").removeClass("show-notification");
+          }, 3000);
+
+        },
+        error: function (error) {
+          alert("error");
+        }
+      });
+    } else {
+      $(".notification-msg").html("Please fill all required fields !");
+      $("body").addClass("show-notification");
+
+      setTimeout(function () {
+        $("body").removeClass("show-notification");
+      }, 3000);
+    }
+
+  });
+
+  $("div[id^='unregistered']").on('click',function(){
+    $(".notification-msg").html("Please get logged in first to use wishlist !");
+      $("body").addClass("show-notification");
+
+      setTimeout(function () {
+        $("body").removeClass("show-notification");
+      }, 3000);
+  });
+
+
+  $("div[id^='add-whishlist']").on('click',function(){
+    suffix = $(this).attr("id").match(/\d+/);
+    $.ajax({
+        url: "http://localhost/Toys-master/Wishlist/addProductToWishlist/",
+        type: 'post',
+        data: {
+          "productid": suffix
+        },
+        dataType: 'json',
+        success: function (json) {
+
+          if (json) {
+            msg = "Product Added to wishlist";
+          } else {
+            msg = "Product already added to whishlist!";
+          }
+
+          $(".notification-msg").html(msg);
+          $("body").addClass("show-notification");
+
+          setTimeout(function () {
+            $("body").removeClass("show-notification");
+          }, 3000);
+
+        },
+        error: function (error) {
+          alert("error"+error.responseText);
+        }
+      });
+  });
+
+  $('.easyzoom').easyZoom();
+  
+
+
+  /*$("div[id^='rating-trigger']").on("click", function (event) {
+    var clickId = $(this).attr("id");
+    suffix = $(this).attr("id").match(/\d+/);
+    var pro_name = $("#pro-name" + suffix).html();
+    var pro_id=$("#"+clickId+" input").val();
+    $("#pro-id").val(pro_id);
+
+    $("#exampleModalLabel").html(pro_name);
+  });*/
+
 
 });

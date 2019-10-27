@@ -9,6 +9,7 @@ class Wishlist extends CI_Controller {
 		$this->load->model('Product_model');
 		$this->load->model('Category_model');
 		$this->load->model('Cart_model');
+		$this->load->model('Wishlist_model');
 		$this->load->library('cart');
 	}
 	public function index()
@@ -63,16 +64,6 @@ class Wishlist extends CI_Controller {
 	public function checkOutCart(){
 		
 	}
-	public function addWish(){
-		
-        $data['userid'] = $this->input->post('userid');
-        $data['productid'] = $this->input->post('productid');
-        $data['createdDate'] = Date('Y-m-d');
-        $this->load->model('Wishlist_model');
-        
-        $id=$this->Wishlist_model->SaveWish($data);
-		echo json_encode($id);
-	}
 
 	public function delete(){
 
@@ -97,11 +88,11 @@ class Wishlist extends CI_Controller {
 		echo json_encode($this->cart->total());
 	}
 
-	// public function checkOut(){
+	public function addProductToWishlist(){
+		$this->load->model('Customer_model');
+		
+		$insert=$this->Wishlist_model->SaveWish();
 
-	// }
+		echo json_encode($insert);
+	}
 }
-
-
-
-?>

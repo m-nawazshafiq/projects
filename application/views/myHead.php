@@ -26,4 +26,5 @@
   <link href="<?php echo base_url(); ?>css/flag-icon.min.css" rel="stylesheet" />
   <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>js/plugin/slick/slick.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>js/plugin/slick/slick-theme.css" />
+  <link rel="stylesheet" href="<?php echo base_url(); ?>css/easyzoom.css" />
 </head>

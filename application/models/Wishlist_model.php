@@ -6,13 +6,31 @@ class Wishlist_model extends CI_Model
         parent::__construct();
         $this->load->database();
     }
-    public function SaveWish($data)
+    public function SaveWish()
     {
-        $this->db->insert('wishlist', $data);
-        $insertId = $this->db->insert_id();
+        $recordInserted = false;
 
+        $userId = $this->Customer_model->getId($this->session->email);
+        $productId = $this->input->post('productid');
+        //echo var_dump($productId); exit();
 
-        return  $insertId;
+        $this->db->select("wishlistid");
+        $this->db->where('userid', $userId);
+        $this->db->where('productid', $productId[0]);
+        $query =  $this->db->get("wishlist");
+        $record = $query->result();
+
+        if (count($record) == 0) {
+
+            $data['userid'] = $userId;
+            $data['productid'] = $productId[0];
+            $data['createdDate'] = Date('Y-m-d');
+
+            $this->db->insert('wishlist', $data);
+            $recordInserted = true;
+        }
+
+        return  $recordInserted;
     }
     public function GetCart()
     {

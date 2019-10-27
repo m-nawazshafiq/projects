@@ -4,9 +4,17 @@ if (isset($_COOKIE["remember_me"])) {
 }
 ?>
 
+<div class="alert alert-success alert-dismissible fade show notification" role="alert">
+    <span class="notification-msg"><strong>Holy guacamole!</strong> You should check in on some of those fields below.</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
 <header>
     <!--Top NavBar-->
     <div class="container top-nav-content">
+
         <div class="row">
             <div class="col-md-3" id="logo">
                 <div class="navbar-header">
@@ -53,17 +61,17 @@ if (isset($_COOKIE["remember_me"])) {
                         <div class="mobile-top-nav-sec">
                             <ul>
                                 <li>
-                                    <a class="active" href="<?php echo base_url() . "Cart/mycart"; ?>"><img src="<?php echo base_url(); ?>images/myImages/cart.png" />
+                                    <a class="active" href="<?php echo base_url() . "Cart/mycart"; ?>"><img src="<?php echo base_url(); ?>images/myImages/shopping-cart.svg" class="header-icons" />
                                         <span>Cart</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#news"><img src="<?php echo base_url(); ?>images/myImages/heart.png" />
+                                    <a href="#news"><img src="<?php echo base_url(); ?>images/myImages/header-heart.svg" class="header-icons" />
                                         <span>Whishlist</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#contact"><img src="<?php echo base_url(); ?>images/myImages/compare.png" />
+                                    <a href="#contact"><img src="<?php echo base_url(); ?>images/myImages/compare.svg" class="header-icons" />
                                         <span>Compare</span>
                                     </a>
                                 </li>
@@ -73,34 +81,38 @@ if (isset($_COOKIE["remember_me"])) {
 
                 </div>
                 <!--mobile top sec ends-->
-                    <div class="d-none d-xl-block">
-                        <div class="d-flex justify-content-end">
-                            <div class="topnav">
-                                <ul>
-                                    <li>
-                                        <div style="position: relative;">
-                                            <a class="active" href="<?php echo base_url() . "Cart/mycart"; ?>"><img src="<?php echo base_url(); ?>images/myImages/cart.png" />
-                                                <p>Cart : <?php echo count($this->cart->contents());?></p>
-                                            </a>
-                                            <div class="cart-notification-cont">
-                                                hi
-                                            </div>
+                <div class="d-none d-xl-block">
+                    <div class="d-flex justify-content-end">
+                        <div class="topnav">
+                            <ul>
+                                <li>
+                                    <div style="position: relative;">
+                                        <a class="active" href="<?php echo base_url() . "Cart/mycart"; ?>"><img src="<?php echo base_url(); ?>images/myImages/shopping-cart.svg" class="header-icons">
+                                            <p>Cart : <span class="cart-count"><?php echo count($this->cart->contents()); ?></span></p>
+                                        </a>
+                                        <div class="cart-notification-cont">
+                                            hi
                                         </div>
-                                    </li>
-                                    <li>
-                                        <a href="#news"><img src="<?php echo base_url(); ?>images/myImages/heart.png" />
+                                    </div>
+                                </li>
+                                <li>
+                                    <?php if (isset($_SESSION['email'])) { ?>
+                                        <a href="<?php echo base_url() . "User/wishlist"; ?>"><img src="<?php echo base_url(); ?>images/myImages/header-heart.svg" class="header-icons-2" />
+                                        <?php } else { ?>
+                                            <a href="#" id="unregistered01"><img src="<?php echo base_url(); ?>images/myImages/header-heart.svg" class="header-icons-2" />
+                                        <?php } ?>
                                             <p>Whishlist</p>
                                         </a>
-                                    </li>
-                                    <li>
-                                        <a href="#contact"><img src="<?php echo base_url(); ?>images/myImages/compare.png" />
-                                            <p>Compare</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                                </li>
+                                <li>
+                                    <a href="#contact"><img src="<?php echo base_url(); ?>images/myImages/compare.svg" class="header-icons-2" />
+                                        <p>Compare</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
+                </div>
 
             </div>
         </div>
