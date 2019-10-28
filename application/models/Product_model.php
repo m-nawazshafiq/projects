@@ -22,11 +22,10 @@ class Product_model extends CI_Model
 
     public function GetRelatedProduct($id)
     {
-        $this->db->select('*');
-        $this->db->from('product');        
-        $this->db->join('relatedproduct','relatedproduct.RelatedProductId=product.Id');
-        $this->db->where('ProductId',$id);
-        $result=$this->db->get()->result();
+        $this->db->select('*,(select AVG(Rating) from productreview where ProductId=product.Id) AS rate');       
+        $this->db->join('product','product.Id=relatedproduct.RelatedProductId');
+        $this->db->where('relatedproduct.ProductId',$id);
+        $result=$this->db->get('relatedproduct')->result();
         return $result;
     }
 
@@ -81,11 +80,32 @@ class Product_model extends CI_Model
         return $this->db->get("product")->result_array();
     }
 
+    public function getCategoryByProduct(){
+        $this->db->select('category.name, category.Id');
+        $this->db->join('product','product.CategoryId=category.Id');
+        return $this->db->get('category')->result();
+    }
+
     public function getLatestProduct()
     {
         $this->db->select("*,(select AVG(Rating) from productreview where ProductId=product.Id) AS rate");
         $this->db->order_by("Id", "desc");
         $this->db->limit(4);
+        return $this->db->get('product')->result();
+    }
+
+    public function getBestSellers(){
+        $this->db->select("Id,Name,OldPrice,Price,Picture");
+        $this->db->where('BestSeller','1');
+        $this->db->order_by("Id", "desc");
+        $this->db->limit(3);
+        return $this->db->get('product')->result();
+    }
+
+    public function getLatestProductShort(){
+        $this->db->select("Id,Name,OldPrice,Price,Picture");
+        $this->db->order_by("Id", "desc");
+        $this->db->limit(3);
         return $this->db->get('product')->result();
     }
 

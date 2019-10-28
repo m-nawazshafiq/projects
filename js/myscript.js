@@ -225,7 +225,7 @@ $(document).ready(function () {
 
     if (email != "" && text != "" && typeof rateStars !== "undefined" && productId != "") {
       $.ajax({
-        url: "http://localhost/Toys-master/Product/productreview/" + productId,
+        url: "http://localhost/BabyLand/Product/productreview/" + productId,
         type: 'post',
         data: {
           "text-review": text,
@@ -239,7 +239,7 @@ $(document).ready(function () {
             msg = "Thanks for your review !";
             $("#review-email").val("");
             $("#review-text").val("");
-            $("input[name='rating']:checked").prop("checked",false);
+            $("input[name='rating']:checked").prop("checked", false);
           } else {
             msg = "Please fill correct fields !";
           }
@@ -267,49 +267,105 @@ $(document).ready(function () {
 
   });
 
-  $("div[id^='unregistered']").on('click',function(){
+  $("div[id^='unregistered']").on('click', function () {
     $(".notification-msg").html("Please get logged in first to use wishlist !");
-      $("body").addClass("show-notification");
+    $("body").addClass("show-notification");
 
-      setTimeout(function () {
-        $("body").removeClass("show-notification");
-      }, 3000);
+    setTimeout(function () {
+      $("body").removeClass("show-notification");
+    }, 3000);
   });
 
 
-  $("div[id^='add-whishlist']").on('click',function(){
+  $("div[id^='add-whishlist']").on('click', function () {
     suffix = $(this).attr("id").match(/\d+/);
     $.ajax({
-        url: "http://localhost/Toys-master/Wishlist/addProductToWishlist/",
-        type: 'post',
-        data: {
-          "productid": suffix
-        },
-        dataType: 'json',
-        success: function (json) {
+      url: "http://localhost/BabyLand/Wishlist/addProductToWishlist/",
+      type: 'post',
+      data: {
+        "productid": suffix
+      },
+      dataType: 'json',
+      success: function (json) {
 
-          if (json) {
-            msg = "Product Added to wishlist";
-          } else {
-            msg = "Product already added to whishlist!";
-          }
-
-          $(".notification-msg").html(msg);
-          $("body").addClass("show-notification");
-
-          setTimeout(function () {
-            $("body").removeClass("show-notification");
-          }, 3000);
-
-        },
-        error: function (error) {
-          alert("error"+error.responseText);
+        if (json) {
+          msg = "Product Added to wishlist";
+        } else {
+          msg = "Product already added to whishlist!";
         }
-      });
+
+        $(".notification-msg").html(msg);
+        $("body").addClass("show-notification");
+
+        setTimeout(function () {
+          $("body").removeClass("show-notification");
+        }, 3000);
+
+      },
+      error: function (error) {
+        alert("error" + error.responseText);
+      }
+    });
   });
 
-  $('.easyzoom').easyZoom();
+  $("div[id^='short-view']").on('click', function () {
+    suffix = $(this).attr("id").match(/\d+/);
+    alert(suffix);
+    $.ajax({
+      url: "http://localhost/BabyLand/Product/ProductQuickView/" + suffix,
+      type: 'get',
+      dataType: 'json',
+      success: function (json) {
+        $('.title-quick-view').html(json[0].Name);
+        var pics=$.parseJSON(json[0].Picture);
+        $(".product-model-img img").attr('src','http://localhost/BabyLand/upload/'+ pics[0]);
+        $(".brand-quick-view").html(json[0].brandName);
+        $(".code-quick-view").html(json[0].Code);
+        if(json[0].stock > 0){
+          $(".stock-quick-view").html("Instock");
+        }else{
+          $(".stock-quick-view").html("Out of Stock");
+        }
+
+        $(".oldprice-quick-view").html(json[0].OldPrice);
+        $(".price-quick-view").html(json[0].Price);
+        
+      },
+      error: function (error) {
+        alert("error" + error.responseText);
+      }
+    });
+  });
+
+  $("div[id^='rating-trigger']").on('click', function () {
+    suffix = $(this).attr("id").match(/\d+/);
+    $.ajax({
+      url: "http://localhost/BabyLand/Product/addCompare/" + suffix,
+      type: 'get',
+      dataType: 'json',
+      success: function (json) {
+        if (json) {
+          msg = "Product Added to Compare list";
+        } else {
+          msg = "Product already added to Compare list!";
+        }
+
+        $(".notification-msg").html(msg);
+        $("body").addClass("show-notification");
+
+        setTimeout(function () {
+          $("body").removeClass("show-notification");
+        }, 3000);
+        
+      },
+      error: function (error) {
+        alert("error" + error.responseText);
+      }
+    });
+  });
   
+  $('.easyzoom').easyZoom();
+
 
 
   /*$("div[id^='rating-trigger']").on("click", function (event) {

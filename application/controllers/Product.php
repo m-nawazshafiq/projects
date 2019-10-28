@@ -31,36 +31,71 @@ class Product extends CI_Controller
 
     public function ProductDetail($id)
     {
-
         //$this->load->library('cart');
         $data['review'] = $this->Product_model->GetReviewById($id);
+
         $data['rating'] = $this->calcRating($data['review']);
-        $this->Product_model->GetRelatedProduct($id);
-        //$data['category_list'] = $this->Category_model->GetCategories();
-        //$data['product_list'] = $this->Product_model->GetProducts();
+
+        $data['relatedProduct'] = $this->Product_model->GetRelatedProduct($id);
 
         $data['product_detail'] = $this->Product_model->getProductById($id);
+
         $data['product_name_list'] = $this->Product_model->GetProductNames();
-        $data['latest_product_list'] = $this->Product_model->getLatestProduct();
+
+        $data['latest_products'] = $this->Product_model->getLatestProductShort();
+
         $data['category_list'] = $this->Category_model->GetCategories();
 
-        $data['product_brand']=$this->Brand_model->getBrandById($data['product_detail'][0]['BrandId']);
-        //$data['news_list'] = $this->Newsitem_model->GetNewsitem();
-        //$data['page_list'] = $this->Page_model->GetPages();
-        //$data['setting_list'] = $this->Settings_model->GetSettings();
-        //$categoryId = $data['product_detail'][0]['CategoryId'];
-        //$BrandId = $data['product_detail'][0]['BrandId'];
+        $data['categories'] = $this->Product_model->getCategoryByProduct();
 
-        //$data['parent_category'] = $this->Category_model->GetCategoryById($categoryId);
-        //$data['parent_brand'] = $this->Brand_model->GetBrandById($BrandId);
-        //$this->load->model('Tags_model');
-        //$data['tag_list'] = $this->Tags_model->GetTags();
+        $data['bestsellers'] = $this->Product_model->getBestSellers();
+
+        $data['product_brand'] = $this->Brand_model->getBrandById($data['product_detail'][0]['BrandId']);
+
         $data['cat_display'] = "hide";
-        // echo "<pre>";
-        // // die(print_r($data));
-        // die(print_r($data['product_detail']));
 
         $this->load->view('myproductdetail', $data);
+    }
+
+    public function compare()
+    {
+        $data['product_name_list'] = $this->Product_model->GetProductNames();
+
+        $data['latest_products'] = $this->Product_model->getLatestProductShort();
+
+        $data['category_list'] = $this->Category_model->GetCategories();
+
+        $data['categories'] = $this->Product_model->getCategoryByProduct();
+
+        $data['bestsellers'] = $this->Product_model->getBestSellers();
+
+        $data['cat_display'] = "hide";
+
+        $this->load->view('compareproduct', $data);
+    }
+
+    public function addCompare($id)
+    {
+        $inserted=false;
+        $ids[] = $id;
+        if (!in_array($id, $ids)) {
+            $cookie = array(
+                'name'   => 'compareId',
+                'value'  => $ids,
+                'expire' => time() + 86500
+            );
+            $this->input->set_cookie($cookie);
+            $inserted=true;
+        }
+
+        echo json_encode($inserted);
+    }
+
+    public function ProductQuickView($id)
+    {
+        $data = $this->Product_model->getProductById($id);
+        $data[0]['brandName'] = $this->Brand_model->getBrandById($data[0]['BrandId'])[0]['Name'];
+        echo json_encode($data);
     }
 
     public function calcRating($reviews)
@@ -117,8 +152,6 @@ class Product extends CI_Controller
             //print_r($_POST);
             //die;
             $data['Picture'] = json_encode($this->fileUpload());
-
-
 
 
             //Product Info
@@ -618,7 +651,7 @@ class Product extends CI_Controller
 
     function productreview($id)
     {
-        $reciewSaved=false;
+        $reciewSaved = false;
         $this->load->library('form_validation');
         $this->form_validation->set_rules('text-review', 'Review', 'required');
         $this->form_validation->set_rules('userEmail', 'Email', 'required');
@@ -632,16 +665,16 @@ class Product extends CI_Controller
             $data['IsApproved'] = "NotApproved";
             $data['CustomerEmail'] = $this->input->post('userEmail');
 
-            if(isset($this->session->email)){
+            if (isset($this->session->email)) {
                 $this->load->model("Customer_model");
-                $userId=$this->Customer_model->getId($this->session->email);
+                $userId = $this->Customer_model->getId($this->session->email);
                 $data['CustomerId'] = $userId;
             }
 
             $data['CreatedDate'] = Date('Y-m-d');
             $this->load->model('Product_model');
             $this->Product_model->saveReview($data);
-            $reciewSaved=true;
+            $reciewSaved = true;
         }
         echo json_encode($reciewSaved);
     }
